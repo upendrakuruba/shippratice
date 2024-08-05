@@ -11,7 +11,7 @@ from django.core.mail import EmailMessage
 from django.http import HttpResponse
 from .models import *
 from carts.views import _cart_id
-import requests
+import requests 
 # Create your views here.
 @login_required(login_url='login')
 def profile(request):
