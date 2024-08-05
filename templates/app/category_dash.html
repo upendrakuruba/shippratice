@@ -1,0 +1,9 @@
+<div class="list-group">
+    <a class="list-group-item {% if '/app/' == request.path  %}active{% endif %}" href="{% url "profile" %}">
+    Profile
+    </a>
+    <a class="list-group-item {% if '/address/' in request.path  %}active{% endif %} " href="{% url "address" %}"> Edit_Profile </a>
+    {% comment %} <a href="#" class="list-group-item list-group-item-action">A fourth link item</a>
+    <a class="list-group-item list-group-item-action disabled" aria-disabled="true">A disabled link item</a> {% endcomment %}
+  
+  </div>

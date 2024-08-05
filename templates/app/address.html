@@ -1,0 +1,62 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}Profile{% endblock title %}
+{% block main-content %}
+<div class="container my-5">
+ <div class="row">
+  <h3>Welcome {{user.first_name}}</h3>
+  <div class="col-sm-2 border-end">
+    {% include "app/profiel_dash.html" %}
+  </div>
+  <div class="col-sm-8 offset-sm-1">
+   <form action="{% url "address" %}" method="POST">
+    {% csrf_token %}
+    <div class="col-12">
+      {% include "alerts.html" %}
+      <label for="inputName" class="form-label">First Name</label>
+      {{user_form.first_name}}
+    </div>
+    <div class="col-12">
+      <label for="inputName" class="form-label">Last Name</label>
+      {{user_form.last_name}}
+    </div>
+    <div class="col-12">
+      <label for="inputName" class="form-label">Phone Number</label>
+      {{user_form.phone_nunber}}
+    </div>
+    <div class="col-12">
+      <label for="inputName" class="form-label">Eamil</label>
+      {{user_form.email}}
+    </div>
+    <div class="col-12">
+      <label for="inputName" class="form-label">User Name</label>
+      {{profile_form.username}}
+    </div>
+    <div class="col-12">
+      <label for="inputAddress" class="form-label">Address</label>
+      {{profile_form.address_line_1}}    
+    </div>
+    <div class="col-12">
+      <label for="inputAddress2" class="form-label">Address 2</label>
+      {{profile_form.address_line_2}}      
+    </div>
+    <div class="col-12">
+      <label for="inputCity" class="form-label">City</label>
+      {{profile_form.city}}  
+    </div>
+    <div class="col-12">
+      <label for="inputCity" class="form-label">State</label>
+      {{profile_form.state}}
+    </div>
+    <div class="col-md-2">
+      <label for="inputZip" class="form-label">Zip</label>
+      {{profile_form.zipcode}}
+    </div>
+    <div class="col-12 mt-3">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+   </form>
+  </div>
+ </div>
+</div>
+{% endblock main-content %}

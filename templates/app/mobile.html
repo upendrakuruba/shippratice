@@ -1,0 +1,68 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}Buy Now{% endblock title %}
+{% block main-content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-4">
+            <div class="list-group">
+                <h2>Categories</h2>
+                <a href="{% url "store" %}" class="list-group-item list-group-item-action {% if '/store/' == request.path  %}active{% endif %} " aria-current="true">ALL</a>
+                {% for category in links %}
+                <a href="{{ category.get_url }}" class="list-group-item list-group-item-action {% if category.get_url == request.path  %}active{% endif %}" aria-current="true">
+                    {{category.category_name}} </a>
+                {% endfor %}
+                {% comment %} {% for product in  products %}
+                <a href="" class="list-group-item list-group-item-action" aria-current="true">
+                    {{product.product_name}}
+                </a>
+                {% endfor %} {% endcomment %}
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="row">
+                {% for product in  products %}
+                <div class="col-sm-3 text-center mb-3">
+                    <a href="{{ product.get_url }}" class="btn">
+                    <div class='item'>
+                        <img src="{{product.images.url}}"  height="300" alt="">
+                        <div class="fw-bold">{{product.product_name}}</div>
+                            <div class="fw-bold ">
+                                Rs.{{product.price}}/- 
+                                <small class="fw-light text-decoration-line-through ">{{product.selling_price}}
+                                </small>
+                            </div>           
+                     </div>
+                    </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+{% endblock main-content %}
+{% comment %} <div class="container my-5">
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="row">
+                {% for product in  products %}
+                <hr>
+                <div class="col-sm-3 text-center mb-3">
+                    <a href="{{ product.get_url }}" class="btn">
+                    <div class='item'>
+                        <img src="{{product.images.url}}"  height="200" alt="">
+                        <div class="fw-bold">{{product.product_name}}</div>
+                            <div class="fw-bold ">
+                                Rs.{{product.price}}/- 
+                                </small>
+                            </div>
+                    </a>
+                    </div>
+                
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>  {% endcomment %}

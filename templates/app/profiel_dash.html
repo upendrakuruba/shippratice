@@ -1,0 +1,6 @@
+<div class="list-group">
+    <a class="list-group-item {% if '/accounts/' == request.path  %}active{% endif %}" href="{% url "profile" %}">
+    Profile
+    </a>
+    <a class="list-group-item {% if '/address/' in request.path  %}active{% endif %} " href="{% url "address" %}"> Edit_Profile </a>  
+  </div>

@@ -1,0 +1,47 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}Customer Registration{% endblock title %}
+{% block main-content %}
+<div class="container">
+  <div class="col-sm-6 offset-sm-3">
+   <h3>Customer Registration</h3>
+   <hr>
+   {% include "alerts.html" %}
+   <form action="{% url "registration" %}" method="POST" novalidate class="shadow p-5">{% csrf_token %}
+      <div class='form-row'>
+    <div class="col form-group ">
+         <label for="inputEmail4" class="form-label">First Name</label>
+         {{form.first_name }}
+    </div>
+    <div class="col form-group ">
+         <label for="inputEmail4" class="form-label">Last Name</label>
+         {{form.last_name}}
+    </div>
+    <div class="mb-3">
+         <label for="inputEmail4" class="form-label">Phonu Number</label>
+         {{form.phone_nunber}}
+    </div>
+    <div class="mb-3">
+     <label for="inputEmail4" class="form-label">Email</label>
+     {{form.email}}
+    </div>
+    <div class="mb-3">
+     <label for="inputPassword1" class="form-label">Password</label>
+     {{form.password}}
+    </div>
+   </div>
+    <div class="mb-3">
+     <label for="inputPassword2" class="form-label">Confirm Password</label>
+     {{form.confirm_password}}
+    </div>
+    <div class="text-end">
+     <button type="submit" class="btn btn-danger">Register</button>
+    </div>
+    <br>
+    <div class="text-center text-primary fw-bold"><small>Existing User ? <a href="{% url 'login' %}"
+       class="text-danger">Login Now</a> </small></div>
+      {{form.errors}}
+   </form>
+  </div>
+</div>
+{% endblock main-content %}
