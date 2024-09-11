@@ -12,27 +12,45 @@
     <div class="col form-group ">
          <label for="inputEmail4" class="form-label">First Name</label>
          {{form.first_name }}
+         {% for error in form.first_name.errors %}
+          <span class="text-danger">{{error}}</span>
+          {% endfor %}
     </div>
     <div class="col form-group ">
          <label for="inputEmail4" class="form-label">Last Name</label>
          {{form.last_name}}
+         {% for error in form.last_name.errors %}
+          <span class="text-danger">{{error}}</span>
+          {% endfor %}
     </div>
     <div class="mb-3">
          <label for="inputEmail4" class="form-label">Phonu Number</label>
          {{form.phone_nunber}}
+         {% for error in form.phone_nunber.errors %}
+          <span class="text-danger">{{error}}</span>
+          {% endfor %}
     </div>
     <div class="mb-3">
      <label for="inputEmail4" class="form-label">Email</label>
-     {{form.email}}
+         {{form.email}}
+         {% for error in form.email.errors %}
+          <span class="text-danger">{{error}}</span>
+          {% endfor %}
     </div>
     <div class="mb-3">
      <label for="inputPassword1" class="form-label">Password</label>
-     {{form.password}}
+         {{form.password}}
+         {% for error in form.password.errors %}
+          <span class="text-danger">{{error}}</span>
+          {% endfor %}
     </div>
    </div>
     <div class="mb-3">
      <label for="inputPassword2" class="form-label">Confirm Password</label>
-     {{form.confirm_password}}
+         {{form.confirm_password}}
+         {% for error in form.non_field_errors %}
+          <span class="text-danger">{{error}}</span>
+          {% endfor %}
     </div>
     <div class="text-end">
      <button type="submit" class="btn btn-danger">Register</button>
@@ -40,7 +58,7 @@
     <br>
     <div class="text-center text-primary fw-bold"><small>Existing User ? <a href="{% url 'login' %}"
        class="text-danger">Login Now</a> </small></div>
-      {{form.errors}}
+      {% comment %} {{form.errors}} {% endcomment %}
    </form>
   </div>
 </div>

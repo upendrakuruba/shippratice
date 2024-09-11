@@ -153,8 +153,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 EMAIL_HOST='smtp.gmail.com'
 EMAIL_USE_TLS='True'
 EMAIL_PORT='587'
-EMAIL_HOST_USER='kurumaupendra@gmail.com'
-EMAIL_HOST_PASSWORD='xfkn sbnx mjlr relz'
+EMAIL_HOST_USER='noreplaynoreplay990@gmail.com'
+EMAIL_HOST_PASSWORD='yqms upub zpey sykt'
 
 
 from django.contrib.messages import constants as messages
