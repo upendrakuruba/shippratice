@@ -12,57 +12,114 @@ from django.http import HttpResponse
 from .models import *
 from carts.views import _cart_id
 import requests 
+from django.db import IntegrityError
+import threading
 # Create your views here.
-@login_required(login_url='login')
-def profile(request):
- if request.method == 'POST':
-        form = CustomerProfileForm(request.POST)
-        if form.is_valid():
-            user = request.user
-            username = form.cleaned_data['username']
-            address_line_1 = form.cleaned_data['address_line_1']
-            address_line_2 = form.cleaned_data['address_line_2']
-            zipcode = form.cleaned_data['zipcode']
-            city = form.cleaned_data['city']
-            state = form.cleaned_data['state']
-            user = UserProfile(user=user,address_line_1=address_line_1,address_line_2=address_line_2,username=username,city=city,zipcode=zipcode,state=state)
-            user.save()
-            messages.success(request,' Your Profile Created .')
-            return redirect('address')
- else:
-    form = CustomerProfileForm
-    context = {
-        'form':form
-    }
-    return render(request, 'app/profile.html',context)
 
 
+class EmailThread(threading.Thread):
+    def __init__(self,send_email):
+        self.send_email = send_email
+        threading.Thread.__init__(self)
+
+    def run(self):
+        self.send_email.send()
 
 
-@login_required(login_url='login')
-def address(request):
-    userprofile = get_object_or_404(UserProfile,user=request.user)
-    if request.method == 'POST':
-        user_form = UserForm(request.POST,instance=request.user)
-        profile_form = UserProfileForm(request.POST,request.FILES,instance=userprofile)
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile_form.save()
-            messages.success(request,'Your profile has been updated')
-            return redirect('address')
+def Dash_board(request):
+    try:
+        if  UserProfile.objects.filter(user=request.user).exists():
+            userprofile = UserProfile.objects.get(user=request.user)
+
+            if request.method == 'POST':
+                pe_form = UserProfileForm(request.POST,request.FILES,instance=userprofile)
+                if pe_form.is_valid():
+                    profile_form=pe_form.save()
+                    messages.success(request,'Your profile has been updated')
+                    return redirect('address')
+                else:
+                    messages.error(request,'Your dont have a Account Please create')
+                    return redirect('profile')
+            else:
+                profile_form = UserProfileForm(instance=userprofile)
+            context = {
+                'profile_form':profile_form,
+                'userprofile':userprofile,
+            }
+            return render(request,'app/dashboard.html',context)
         else:
-            print('10*__________',user_form)
-            print('10*--------------',profile_form)
-    else:
-        user_form = UserForm(instance=request.user)
-        profile_form = UserProfileForm(instance=userprofile)
-    context = {
-        'user_form':user_form,
-        'profile_form':profile_form,
-        'userprofile':userprofile,
-    }
-    return render(request, 'app/address.html',context)
+            messages.error(request,'Your not created profile Please create')
+            return redirect('profile')
+    except IntegrityError:
+        return redirect('profile')
 
+
+
+@login_required(login_url='login')
+def Pro_file(request):
+    try:
+        profile = request.user
+    except UserProfile.DoesNotExist:
+     profile = UserProfile(user=request.user)
+    if request.method == 'POST':
+            form = CustomerProfileForm(request.POST,request.FILES)
+            if form.is_valid():
+                try:
+                    user = request.user
+                    profile_picture = form.cleaned_data['profile_picture']
+                    username = form.cleaned_data['username']
+                    address_line_1 = form.cleaned_data['address_line_1']
+                    address_line_2 = form.cleaned_data['address_line_2']
+                    zipcode = form.cleaned_data['zipcode']
+                    city = form.cleaned_data['city']
+                    state = form.cleaned_data['state']
+                    mobile = form.cleaned_data['mobile']
+                    user = UserProfile(user=user,profile_picture=profile_picture,username=username,address_line_1=address_line_1,address_line_2=address_line_2,mobile=mobile,city=city,zipcode=zipcode,state=state)
+                    user.save()
+                    messages.success(request,' Your Profile Created .')
+                    return redirect('address')
+                except IntegrityError:
+                    messages.error(request,'Your already created profile')
+                    return redirect('profile')
+
+    else:
+        form = CustomerProfileForm()
+    context = {'form':form,'profile':profile}
+    return render(request,'app/profile.html',context)
+
+
+
+@login_required(login_url='login')
+def Add_ress(request):
+    try:
+        if  UserProfile.objects.filter(user=request.user).exists():
+            userprofile = UserProfile.objects.get(user=request.user)
+            if request.method == 'POST':
+                ur_form = UserForm(request.POST,instance=request.user)
+                pe_form = UserProfileForm(request.POST,request.FILES,instance=userprofile)
+                if ur_form.is_valid() and pe_form.is_valid():
+                    user_form=ur_form.save()
+                    profile_form=pe_form.save()
+                    messages.success(request,'Your profile has been updated')
+                    return redirect('address')
+                else:
+                    # print('10************',ur_form.errors,pe_form.errors)
+                    messages.error(request,'Your dont have a Account Please create')
+                    return redirect('profile')
+            else:
+                user_form = UserForm(instance=request.user)
+                profile_form = UserProfileForm(instance=userprofile)
+            context = {
+                'user_form':user_form,
+                'profile_form':profile_form,
+                'userprofile':userprofile,
+            }
+            return render(request,'app/address.html',context)
+        else:
+            messages.error(request,'Your not created profile Please create')
+            return redirect('profile')
+    except IntegrityError:
+        return redirect('profile')
 
 @login_required(login_url='login')
 def change_password(request):
@@ -83,7 +140,7 @@ def change_password(request):
                 messages.success(request,'Password Updated Successfully.')
                 return redirect('changepassword')
             else:
-                messages.error(request,'Please Enter Valid Password')
+                messages.error(request,'Please Enter correct Current Password')
                 return redirect('changepassword')
 
         else:
@@ -92,7 +149,7 @@ def change_password(request):
  return render(request, 'app/changepassword.html')
 
 
-def login(request):
+def login_view(request):
  if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
@@ -110,7 +167,7 @@ def login(request):
            except:
                pass
            auth.login(request,user)
-           messages.success(request,'Your Now Logged in')
+        #    messages.success(request,'Your Now Logged in')
            url = request.META.get("HTTP_REFERER")
            try:
                 query = requests.utils.urlparse(url).query
@@ -150,7 +207,8 @@ def customerregistration(request):
             })
             to_email = email
             send_email = EmailMessage(email_subject,message,to=[to_email])
-            send_email.send()
+            # send_email.send()
+            EmailThread(send_email).start()
             # messages.success(request,'Thankyou for registerring with us. we have send you a verification email to your email address[kurumaupendra@gmail.com]. Please verify it.')
             return redirect('/accounts/login/?command=verification&email='+email)
     else:
@@ -180,7 +238,7 @@ def activate(request,uidb64,token):
         return redirect('login')
     else:
         messages.error(request,'Invalid activation link')
-        return redirect('register')
+        return redirect('registration')
     
 
 
@@ -200,7 +258,7 @@ def forgotpassword(request):
             })
             to_email = email
             send_email = EmailMessage(email_subject,message,to=[to_email])
-            send_email.send()
+            EmailThread(send_email).start()
             messages.success(request,'Password Reset email has been sent to your address .')
             return redirect('login')
         else:
@@ -306,3 +364,21 @@ def direct_checkout(request,product_id):
 
 def error_404(request,exception):
     return render(request,'app/404_page.html')
+
+
+def DeleteView(request):
+    try:
+        userprofile = UserProfile.objects.get(user=request.user)
+        userprofile.delete()
+        messages.success(request,'Your profile deleted')
+        return redirect('profile')
+    except Exception as e:
+        print(e)
+
+
+def my_custom_page_not_found_view(request,exception):
+    return render(request,'app/404_not_found.html')
+
+
+def my_custom_server_error_view(request):
+    return render(request,'app/server_error.html')

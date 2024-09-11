@@ -43,7 +43,7 @@ class RegistrationForm(forms.ModelForm):
 class CustomerProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['username','address_line_1','address_line_2','zipcode','city','state']
+        fields = ['username','address_line_1','address_line_2','mobile','zipcode','city','profile_picture','state']
 
     def __init__(self,*args, **kwargs):
         super(CustomerProfileForm,self).__init__(*args, **kwargs)
@@ -62,7 +62,7 @@ class CustomerProfileForm(forms.ModelForm):
 class UserForm(forms.ModelForm):
     class Meta:
      model = Account
-     fields = ('first_name','last_name','phone_nunber','email')
+     fields = ('first_name','last_name')
     def __init__(self,*args, **kwargs):
         super(UserForm,self).__init__(*args, **kwargs)
         for field in self.fields:
@@ -70,10 +70,10 @@ class UserForm(forms.ModelForm):
 
 
 class UserProfileForm(forms.ModelForm):
+    profile_picture = forms.ImageField(required=False,error_messages={"invalid":{"Image files only"}},widget=forms.FileInput)
     class Meta:
-
         model = UserProfile
-        fields = ('username','address_line_1','address_line_2','city','state','zipcode')
+        fields = ('username','address_line_1','address_line_2','mobile','city','profile_picture','state','zipcode')
     def __init__(self,*args, **kwargs):
         super(UserProfileForm,self).__init__(*args, **kwargs)
         for field in self.fields:
