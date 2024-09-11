@@ -377,8 +377,8 @@ def DeleteView(request):
 
 
 def my_custom_page_not_found_view(request,exception):
-    return render(request,'app/404_not_found.html')
+    return render(request,'404_not_found.html')
 
 
 def my_custom_server_error_view(request):
-    return render(request,'app/server_error.html')
+    return render(request,'server_error.html')
