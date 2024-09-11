@@ -55,9 +55,9 @@
     <hr>
 
     {% if not address %}
-    <a href='profile'>Your not created the address</a>
+    <a href='{% url "profile" %}'><h3>Your not created the address</h3></a>
     {% else %}
-    <form action="{% url "checkout" %}">
+    <form action="{% url 'checkout' %}">
       <div class="card">
         <div class="card-body">
           {% for ad in  address%}
